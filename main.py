@@ -31,3 +31,6 @@ def all_from_mongo(name):
 if __name__ == '__main__': #this will check that the name is the meain
     app.run(debug=True) # we can define the port, port = 3000 and asignes the address
                 # debug= True/False, when you change something it updates
+
+
+test 23
