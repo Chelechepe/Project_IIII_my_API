@@ -4,7 +4,7 @@ from config.mongoconfig import collection
 # function to get the info 
 
 def all_sentences(name):
-    query = {"name":f"{name}"}
+    query = {"author":f"{name}"}
     sent = list(collection.find(query,{"_id":0}))
     return sent
 

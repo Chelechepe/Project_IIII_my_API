@@ -11,5 +11,5 @@ if not dburl:
 
 client = pymongo.MongoClient(dburl)
 db = client["Ironhack"]
-collection = db.get_collection("Shooting")
+collection = db.get_collection("friends")
 collection.find_one()
