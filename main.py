@@ -69,8 +69,17 @@ def get_all_by_season_episode(season,episode_title):
 # we use our sqltool in the tool file import it as sql and make a query to get all said during an episode in a specific season
 
 @app.route("/episodes/<season>/<episode_title>/<name>")
-def get_all_by_season_episode_name(season,episode_title,name):
-    return jsonify(sql.get_all_by_season_episode_name(season,episode_title,name)) 
+def get_all_by_season_episode_name (season,episode_title,name):
+    test = jsonify(sql.get_all_by_season_episode_name(season,episode_title,name)) 
+    all = test.get_json()
+    if 'language' in request.args.keys():
+        for one in all:
+            language = request.args["language"]
+            trans = googletrans.Translator()
+            result = trans.translate(one["quote"], dest=language)
+
+            one["quote"] = result.text
+    return all
 
 #this will check that the name is the meain
 # we can define the port, port = 3000 and asignes the address
