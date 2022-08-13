@@ -44,29 +44,31 @@ def list_all_characters():
 def list_all_episodes():
     return jsonify(sql.list_all_episodes())
 
-# Get everything: SQL database table friends
-# we use our sqltool in the tool file import it as sql and make a query to get everything from friends
+# Getting query on all the lines ever said from every character in friends
+# by character, episode, season in ascendin order
 
 @app.route("/line")
 def all_lines ():
     return jsonify(sql.get_everything()) 
 
-# Get everything FROM someone: SQL & argument
-# we use our sqltool in the tool file import it as sql and make a query to get sentences said by a named friends
+# Get everything from friends db
+# we use to query to get sentences said by specific character in friends
+# list of characters can be extracted from /characters
 
 @app.route("/characters/<name>")
 def character_name (name):
     return jsonify(sql.get_everything_from_someone(name)) 
 
-# Get everything FROM someone: SQL & argument
-# we use our sqltool in the tool file import it as sql and make a query to get all said during an episode in a specific season
+# Get everything from friends db
+# list all the lines filtered by season and episode title
 
 @app.route("/episodes/<season>/<episode_title>")
 def get_all_by_season_episode(season,episode_title):
     return jsonify(sql.get_all_by_season_episode(season,episode_title)) 
 
 # Get everything FROM someone: SQL & argument
-# we use our sqltool in the tool file import it as sql and make a query to get all said during an episode in a specific season
+# list all the lines filtered by season and episode title by character
+# it contains the parameters for language translator
 
 @app.route("/episodes/<season>/<episode_title>/<name>")
 def get_all_by_season_episode_name (season,episode_title,name):
