@@ -50,12 +50,17 @@ def get_sentiment_episode(season,episode_number,name):
     df=pd.read_sql_query(query,con=engine)
     return df.to_dict(orient='records')
 
-    #we will use this to filter the sentiment of a episode per season
+# we will use this to filter the sentiment of a episode per season
 def get_sentiment_season(season,episode_number):
     query = (f"""SELECT * FROM friends.friends WHERE season = {season} and episode_number = "{episode_number}" order by quote_order asc;""")
     df=pd.read_sql_query(query,con=engine)
     return df.to_dict(orient='records')
 
+# we will use this to filter the sentiment of a character per season
+def get_sentiment_season_character(season,name):
+    query = (f"""SELECT * FROM friends.friends WHERE season = {season} and author = "{name}" order by quote_order asc;""")
+    df=pd.read_sql_query(query,con=engine)
+    return df.to_dict(orient='records')
 
 ## POST
 def new_message (author, episode_number, episode_title, quote, quote_order, season):

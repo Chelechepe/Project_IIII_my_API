@@ -138,7 +138,7 @@ def get_sentiment_season(season,episode_number):
         return "No sentiment detected"
 
 # we use the number of the season and the number of the episode to identify
-# the sentiment that the episode has.
+# the sentiment that a character has in a specific the episode has.
 
 @app.route("/charactersentiment/<season>/<episode_number>/<name>")
 def get_sentiment_episode(season,episode_number,name):
@@ -176,6 +176,48 @@ def get_sentiment_episode(season,episode_number,name):
         return f"{name} has a sentiment indicator of {feelings}, meaning this episode was NEGATIVE in Season {season} Episode {episode_number}."
     elif feelings < -0.50:
         return f"{name} has a sentiment indicator of {feelings}, meaning this episode was VERY NEGATIVE in Season {season} Episode {episode_number}."
+    else:
+        return "No sentiment detected"
+
+# we use the number of the season and character to identify
+# the sentiment that character during the season.
+
+@app.route("/seasons/charactersentiment/<season>/<name>")
+def get_sentiment_season_character(season,name):
+    sese = jsonify(sql.get_sentiment_season_character(season,name)) 
+    all = sese.get_json()
+    sentimentdf = pd.DataFrame.from_dict(all)
+    nltk.downloader.download('vader_lexicon')
+    sia = SentimentIntensityAnalyzer()
+    
+    def sa(x):
+        try:
+            return sia.polarity_scores(x)
+        except:
+            return x
+
+    sentimentdf["sent_score"] = sentimentdf["quote"].apply(sa)
+    sentiment=[]
+
+    for sent in sentimentdf["sent_score"]:
+            sentiment.append(sent["compound"])
+
+    feelings = round(st.mean(sentiment),4)
+
+    if feelings == 0:
+        return f"{name} has a sentiment indicator of {feelings}, meaning it was NEUTRAL in Season {season}."
+    elif feelings > 0:
+        return f"{name} has a sentiment indicator of {feelings}, meaning it was SOMEWHAT POSITIVE in Season {season}."
+    elif feelings > 0.25:
+        return f"{name} has a sentiment indicator of {feelings}, meaning it was POSITIVE in Season {season}."
+    elif feelings > 0.50:
+        return f"{name} has a sentiment indicator of {feelings}, meaning it was VERY POSITIVE in Season {season}."
+    elif feelings < 0:
+        return f"{name} has a sentiment indicator of {feelings}, meaning it was SOMEWHAT NEGATIVE in Season {season}."
+    elif feelings < -0.25:
+        return f"{name} has a sentiment indicator of {feelings}, meaning it was NEGATIVE in Season {season}."
+    elif feelings < -0.50:
+        return f"{name} has a sentiment indicator of {feelings}, meaning it was VERY NEGATIVE in Season {season}."
     else:
         return "No sentiment detected"
 
