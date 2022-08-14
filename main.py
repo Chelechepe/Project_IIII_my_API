@@ -11,6 +11,10 @@ import pandas as pd
 import json
 import random
 import googletrans
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk.corpus import stopwords
+import statistics as st
 
 app =Flask(__name__)
 
@@ -62,6 +66,13 @@ def character_name (name):
 # Get everything from friends db
 # list all the lines filtered by season and episode title
 
+@app.route("/season/<season>/<name>")
+def get_all_by_season_name(season, name):
+    return jsonify(sql.get_all_by_season_name(season, name)) 
+
+# Get everything from friends db
+# list all the lines filtered by season and episode title
+
 @app.route("/episodes/<season>/<episode_title>")
 def get_all_by_season_episode(season,episode_title):
     return jsonify(sql.get_all_by_season_episode(season,episode_title)) 
@@ -82,6 +93,91 @@ def get_all_by_season_episode_name (season,episode_title,name):
 
             one["quote"] = result.text
     return all
+
+#lets do sentiments bitches!
+# we use the number of the season and the number of the episode to identify
+# the sentiment that the episode has.
+
+@app.route("/sentiment/<season>/<episode_number>")
+def get_sentiment_season(season,episode_number):
+    sese = jsonify(sql.get_sentiment_season(season,episode_number)) 
+    all = sese.get_json()
+    sentimentdf = pd.DataFrame.from_dict(all)
+    nltk.downloader.download('vader_lexicon')
+    sia = SentimentIntensityAnalyzer()
+    
+    def sa(x):
+        try:
+            return sia.polarity_scores(x)
+        except:
+            return x
+
+    sentimentdf["sent_score"] = sentimentdf["quote"].apply(sa)
+    sentiment=[]
+
+    for sent in sentimentdf["sent_score"]:
+            sentiment.append(sent["compound"])
+
+    feelings = round(st.mean(sentiment),4)
+
+    if feelings == 0:
+        return f"We have a sentiment indicator of {feelings}, meaning this episode was NEUTRAL"
+    elif feelings > 0:
+        return f"We have a sentiment indicator of {feelings}, meaning this episode was SOMEWHAT POSITIVE"
+    elif feelings > 0.25:
+        return f"We have a sentiment indicator of {feelings}, meaning this episode was POSITIVE"
+    elif feelings > 0.50:
+        return f"We have a sentiment indicator of {feelings}, meaning this episode was VERY POSITIVE"
+    elif feelings < 0:
+        return f"We have a sentiment indicator of {feelings}, meaning this episode was SOMEWHAT NEGATIVE"
+    elif feelings < -0.25:
+        return f"We have a sentiment indicator of {feelings}, meaning this episode was NEGATIVE"
+    elif feelings < -0.50:
+        return f"We have a sentiment indicator of {feelings}, meaning this episode was VERY NEGATIVE"
+    else:
+        return "No sentiment detected"
+
+# we use the number of the season and the number of the episode to identify
+# the sentiment that the episode has.
+
+@app.route("/charactersentiment/<season>/<episode_number>/<name>")
+def get_sentiment_episode(season,episode_number,name):
+    sese = jsonify(sql.get_sentiment_episode(season,episode_number,name)) 
+    all = sese.get_json()
+    sentimentdf = pd.DataFrame.from_dict(all)
+    nltk.downloader.download('vader_lexicon')
+    sia = SentimentIntensityAnalyzer()
+    
+    def sa(x):
+        try:
+            return sia.polarity_scores(x)
+        except:
+            return x
+
+    sentimentdf["sent_score"] = sentimentdf["quote"].apply(sa)
+    sentiment=[]
+
+    for sent in sentimentdf["sent_score"]:
+            sentiment.append(sent["compound"])
+
+    feelings = round(st.mean(sentiment),4)
+
+    if feelings == 0:
+        return f"{name} has a sentiment indicator of {feelings}, meaning this episode was NEUTRAL in Season {season} Episode {episode_number}."
+    elif feelings > 0:
+        return f"{name} has a sentiment indicator of {feelings}, meaning this episode was SOMEWHAT POSITIVE in Season {season} Episode {episode_number}."
+    elif feelings > 0.25:
+        return f"{name} has a sentiment indicator of {feelings}, meaning this episode was POSITIVE in Season {season} Episode {episode_number}."
+    elif feelings > 0.50:
+        return f"{name} has a sentiment indicator of {feelings}, meaning this episode was VERY POSITIVE in Season {season} Episode {episode_number}."
+    elif feelings < 0:
+        return f"{name} has a sentiment indicator of {feelings}, meaning this episode was SOMEWHAT NEGATIVE in Season {season} Episode {episode_number}."
+    elif feelings < -0.25:
+        return f"{name} has a sentiment indicator of {feelings}, meaning this episode was NEGATIVE in Season {season} Episode {episode_number}."
+    elif feelings < -0.50:
+        return f"{name} has a sentiment indicator of {feelings}, meaning this episode was VERY NEGATIVE in Season {season} Episode {episode_number}."
+    else:
+        return "No sentiment detected"
 
 #this will check that the name is the meain
 # we can define the port, port = 3000 and asignes the address

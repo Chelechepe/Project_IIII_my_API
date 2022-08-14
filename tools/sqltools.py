@@ -31,11 +31,31 @@ def get_all_by_season_episode(season,episode_title):
     df=pd.read_sql_query(query,con=engine)
     return df.to_dict(orient='records')
 
+## GET all quotes in a given season by character in the data base
+def get_all_by_season_name(season,name):
+    query = (f"""SELECT * FROM friends.friends WHERE season = {season} and author = "{name}" order by quote_order asc;""")
+    df=pd.read_sql_query(query,con=engine)
+    return df.to_dict(orient='records')
+
 ## GET all quotes in a given episode by season by character in the data base
 def get_all_by_season_episode_name(season,episode_title,name):
     query = (f"""SELECT * FROM friends.friends WHERE season = {season} and episode_title = "{episode_title}" and author = "{name}" order by quote_order asc;""")
     df=pd.read_sql_query(query,con=engine)
     return df.to_dict(orient='records')
+
+## GET all quotes in a given episode by season by character in the data base
+    #we will use this to filter the sentiment of a character per season per espisode
+def get_sentiment_episode(season,episode_number,name):
+    query = (f"""SELECT * FROM friends.friends WHERE season = {season} and episode_number = "{episode_number}" and author = "{name}" order by quote_order asc;""")
+    df=pd.read_sql_query(query,con=engine)
+    return df.to_dict(orient='records')
+
+    #we will use this to filter the sentiment of a episode per season
+def get_sentiment_season(season,episode_number):
+    query = (f"""SELECT * FROM friends.friends WHERE season = {season} and episode_number = "{episode_number}" order by quote_order asc;""")
+    df=pd.read_sql_query(query,con=engine)
+    return df.to_dict(orient='records')
+
 
 ## POST
 def new_message (author, episode_number, episode_title, quote, quote_order, season):
