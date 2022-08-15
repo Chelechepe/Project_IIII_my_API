@@ -239,7 +239,7 @@ def insert_message ():
 
     return sql.new_message (author, episode_number, episode_title, quote, quote_order, season)
 
-#this will check that the name is the meain
+# this will check that the name is the meain
 # we can define the port, port = 3000 and asignes the address
 # debug= True/False, when you change something it updates
 
