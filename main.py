@@ -228,8 +228,16 @@ def get_sentiment_season_character(season,name):
 # '{author}', '{episode_number}', '{episode_title}', '{quote}', '{quote_order}', '{season}')
 
 @app.route("/post", methods=["POST"])
-def new_message (author, episode_number, episode_title, quote, quote_order, season):
-    return jsonify(sql.new_message (author, episode_number, episode_title, quote, quote_order, season)) 
+def insert_message ():
+
+    author = request.form.get("author")
+    episode_number = request.form.get("episode_number")
+    episode_title = request.form.get("episode_title")
+    quote = request.form.get("quote")
+    quote_order = request.form.get("quote_order")
+    season = request.form.get("season")
+
+    return sql.new_message (author, episode_number, episode_title, quote, quote_order, season)
 
 #this will check that the name is the meain
 # we can define the port, port = 3000 and asignes the address
