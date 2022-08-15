@@ -13,7 +13,7 @@ ________________________________________________
 
 ### My Firends TV Show - API query 
 
-<p align="center" width="100%">
+<p align="Left" width="100%">
     <img width="63%" src="https://raw.githubusercontent.com/Chelechepe/Project_IV_my_API/main/images/friends_logo.gif">
 </p>
 </br>
@@ -92,30 +92,81 @@ route http://127.0.0.1:5000/episodes</br>
         note: this would query all lines in the Friends TV 
         show season 2 in episode "Ross's New Girlfriend"
 
-### 8 - Endpoint route for:
-Get everything FROM someone: SQL & argument</br>
-list all the lines filtered by season and episode title by character</br>
+### 8 - Endpoint route for lines of a Character from a given episode and season:
+Get list of all the lines filtered by season and episode title by character</br>
 it contains the parameters for language translator</br>
 
         http://127.0.0.1:5000/episodes/<season>/<episode_title>/<name>
+
+        example: 
+
+            http://127.0.0.1:5000/episodes/2/Ross's%20New%20Girlfriend/rachel
+
+        note: this would query all the Rachel's lines in the Friends TV 
+        show season 2 in episode "Ross's New Girlfriend"
+    
+    Language Translator parameter:
+
         http://127.0.0.1:5000/episodes/<season>/<episode_title>/<name>?language=es
 
+        example: 
 
-### 9 - Endpoint route for:
-Get everything from friends db</br>
-list all the lines filtered by season and episode title</br>
+            http://127.0.0.1:5000/episodes/2/Ross's%20New%20Girlfriend/rachel?language=es
+
+        note: this would query all the Rachel's lines in the Friends TV 
+        show season 2 in episode "Ross's New Girlfriend" in the lenguage spanish
+
+        List of all Googletranslate languages abreviatios:
+        https://sites.google.com/site/opti365/translate_codes
+
+### 9 - Endpoint route for all lines said by character in season:
+Get list all the lines said by a character in a whole season of Friends Tv Show</br>
 
         http://127.0.0.1:5000/season/<season>/<name>
 
-### 10 - Endpoint route for:
-we use the number of the season and character to identify</br>
+        example: 
+
+            http://127.0.0.1:5000/season/2/Ross
+        
+        note: this would query all the Ross's lines in the Friends TV for
+        show season 2 
+
+### 10 - Endpoint route for sentiment of a given character in a season:
+Use the number of the season and character to identify</br>
 the sentiment that character during the season.</br>
 
         http://127.0.0.1:5000/seasons/charactersentiment/<season>/<name>
 
-### 11 - Endpoint route for:
-lets do sentiments bitches!</br>
-we use the number of the season and the number of the episode to identify</br>
+        example: 
+
+            http://127.0.0.1:5000/seasons/charactersentiment/2/chandler
+        
+        note: this would return the overall sentiment of all the quotes 
+        said by Chandler in season 2 of the Friends TV for show.
+
+### 11 - Endpoint route for sentiment on a given Episode:
+Use the number of the season and the number of the episode to identify</br>
 the sentiment that the episode has.</br>
 
-        http://127.0.0.1:5000/sentiment/<season>/<episode_number>   
+        http://127.0.0.1:5000/sentiment/<season>/<episode_number> 
+
+        example: 
+
+            http://127.0.0.1:5000/sentiment/2/2
+        
+        note: this would return the overall sentiment of episode 2 in season 2
+        of all the quotes said during the episode of the Friends TV for show.
+
+### 12 - Endpoint route for posting a new entry through API:
+Post a new entry into the DB for future query in API</br>
+the sentiment that character during the season.</br>
+'{author}', '{episode_number}', '{episode_title}', '{quote}', </br>
+'{quote_order}', '{season}')</br>
+
+        http://127.0.0.1:5000/post
+
+______________________________________________________________________
+<p align="Left" width="100%">
+    <img width="100%" src="https://c.tenor.com/AhORKp-GmwkAAAAC/bye-chandlerbing.gif">
+</p>
+        

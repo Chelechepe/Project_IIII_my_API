@@ -1,3 +1,4 @@
+
 from flask import Flask
 import random
 from pymongo import MongoClient
@@ -220,6 +221,15 @@ def get_sentiment_season_character(season,name):
         return f"{name} has a sentiment indicator of {feelings}, meaning it was VERY NEGATIVE in Season {season}."
     else:
         return "No sentiment detected"
+
+
+# Post a new entry into the DB for future query in API
+# Input all the filds that are available are: 
+# '{author}', '{episode_number}', '{episode_title}', '{quote}', '{quote_order}', '{season}')
+
+@app.route("/post", methods=["POST"])
+def new_message (author, episode_number, episode_title, quote, quote_order, season):
+    return jsonify(sql.new_message (author, episode_number, episode_title, quote, quote_order, season)) 
 
 #this will check that the name is the meain
 # we can define the port, port = 3000 and asignes the address
